@@ -66,7 +66,7 @@ dummy_majority.score(X_test,y_test)
 #Most frequent strategy
 from sklearn.metrics import confusion_matrix
 dummy_majority = DummyClassifier(strategy = 'most_frequent').fit(X_train, y_train)
-y_majority_predicted = dummy_majority.predict(X_test)
+y_majority_predicted = dummy_majority.predict(X_test) 
 confusion = confusion_matrix(y_test, y_majority_predicted)
 print("Most frequent class(dummy classifier)\n", confusion)
 
@@ -76,3 +76,33 @@ dummy_stratified = DummyClassifier(strategy = 'stratified').fit(X_train, y_train
 y_stratified_predicted = dummy_stratified.predict(X_test)
 confusion = confusion_matrix(y_test, y_stratified_predicted)
 print("Stratified class(dummy classifier)\n", confusion)
+
+#Evaluation metrics for binary classification
+
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+print('Accuracy:{:.2f}' .format(accuracy_score(y_test, dt_predicted)))
+print('Precision:{:.2f}' .format(precision_score(y_test, dt_predicted)))
+print('Recall:{:.2f}' .format(recall_score(y_test, dt_predicted)))
+print('F1 score:{:.2f}' .format(f1_score(y_test, dt_predicted)))
+
+#Classification reports for all classifiers
+#Decision tree
+from sklearn.metrics import classification_report
+print(classification_report(y_test,dt_predicted, target_names=['Negative','Positive']))
+#SVM
+print(classification_report(y_test,svm_predicted, target_names=['Negative','Positive']))
+#Logistic Regression
+print(classification_report(y_test, lr_predicted, target_names=['Negative','Positive']))
+
+#Decision functions
+X_train, X_test, y_train, y_test = train_test_split(X, y_binary_imbalanced, random_state=0)
+y_scores_lr = lr.fit(X_train, y_train).decision_function(X_test)
+y_score_list = list(zip(y_test[0:20], y_scores_lr))
+y_score_list
+
+#Predict proba
+X_train, X_test, y_train, y_test = train_test_split(X, y_binary_imbalanced, random_state=0)
+y_proba_lr = lr.fit(X_train, y_train).predict_proba(X_test)
+y_proba_list = list(zip(y_test[0:20], y_proba_lr[0:20,1]))
+y_proba_list
